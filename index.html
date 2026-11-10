@@ -1,1 +1,113 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>بازی موتورسواری مهدی</title>
+<style>
+body {
+  margin: 0;
+  background: #222;
+  color: white;
+  text-align: center;
+  font-family: sans-serif;
+}
+h2 { color: orange; }
+#game {
+  width: 300px;
+  height: 450px;
+  background: #555;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+  border: 4px solid white;
+}
+#road {
+  position: absolute;
+  left: 145px;
+  width: 10px;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to bottom, white 0 35px, transparent 35px 70px
+  );
+}
+#bike {
+  position: absolute;
+  bottom: 25px;
+  left: 125px;
+  font-size: 42px;
+}
+.coin {
+  position: absolute;
+  font-size: 28px;
+}
+button {
+  padding: 15px 30px;
+  margin: 10px;
+  font-size: 20px;
+  border-radius: 12px;
+}
+</style>
+</head>
+<body>
 
+<h2>🏍️ موتورسواری مهدی</h2>
+<p>امتیاز: <span id="score">0</span></p>
+
+<div id="game">
+  <div id="road"></div>
+  <div id="bike">🏍️</div>
+</div>
+
+<button onclick="move(-25)">⬅️</button>
+<button onclick="move(25)">➡️</button>
+<button onclick="location.reload()">🔄</button>
+
+<script>
+let bike = document.getElementById("bike");
+let game = document.getElementById("game");
+let score = 0;
+let position = 125;
+
+function move(x) {
+  position += x;
+  position = Math.max(0, Math.min(250, position));
+  bike.style.left = position + "px";
+}
+
+function createCoin() {
+  let coin = document.createElement("div");
+  coin.className = "coin";
+  coin.innerText = "🪙";
+  coin.style.left = Math.floor(Math.random()*260) + "px";
+  coin.style.top = "-30px";
+  game.appendChild(coin);
+
+  let y = -30;
+
+  let timer = setInterval(() => {
+    y += 4;
+    coin.style.top = y + "px";
+
+    if (y > 400) {
+      clearInterval(timer);
+      coin.remove();
+    }
+
+    if (
+      y > 360 && y < 430 &&
+      Math.abs(parseInt(coin.style.left)-position) < 35
+    ) {
+      score++;
+      document.getElementById("score").innerText = score;
+      clearInterval(timer);
+      coin.remove();
+    }
+  }, 40);
+}
+
+setInterval(createCoin, 1300);
+</script>
+
+</body>
+</html>
